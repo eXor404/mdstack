@@ -1,0 +1,5 @@
+node_modules/
+.astro/
+example/
+*.log
+.DS_Store

@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+
+# Astro caches/build artifacts
+app/.astro/
+app/node_modules/
+app/dist/
+
+# Sample build output
+example/dist/
+example/.astro/

@@ -1,0 +1,21 @@
+---
+import { getCollection, render } from 'astro:content';
+import Doc from '../layouts/Doc.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('docs');
+  return entries
+    .filter((entry) => entry.id !== 'footer')
+    .map((entry) => ({
+      params: { slug: entry.id === 'index' ? undefined : entry.id },
+      props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const title = entry.data.title ?? entry.id;
+---
+<Doc title={title} currentId={entry.id} headings={headings}>
+  <Content />
+</Doc>

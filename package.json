@@ -1,0 +1,24 @@
+{
+  "name": "mdstack",
+  "version": "0.1.0",
+  "description": "Drop a folder of markdown files, get a rendered site.",
+  "type": "module",
+  "bin": {
+    "mdstack": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "app"
+  ],
+  "scripts": {
+    "dev": "node bin/cli.js dev ./example",
+    "build": "node bin/cli.js build ./example",
+    "preview": "node bin/cli.js preview ./example"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "astro": "^6.2.1"
+  }
+}
