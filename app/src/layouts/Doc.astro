@@ -2,6 +2,36 @@
 import { getCollection } from 'astro:content';
 import '~theme';
 import 'katex/dist/katex.min.css';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const DEFAULT_CONFIG = {
+  brand: { text: 'mdstack', logo: null },
+  theme: 'angular',
+  footer: { copyright: '' },
+};
+
+async function loadSiteConfig() {
+  const source = process.env.MD_SOURCE;
+  if (!source) return DEFAULT_CONFIG;
+  const cfgPath = resolve(source, 'mdstack.config.js');
+  if (!existsSync(cfgPath)) return DEFAULT_CONFIG;
+  try {
+    const mod = await import(pathToFileURL(cfgPath).href);
+    const user = mod.default ?? {};
+    return {
+      ...DEFAULT_CONFIG,
+      ...user,
+      brand: { ...DEFAULT_CONFIG.brand, ...(user.brand ?? {}) },
+      footer: { ...DEFAULT_CONFIG.footer, ...(user.footer ?? {}) },
+    };
+  } catch {
+    return DEFAULT_CONFIG;
+  }
+}
+
+const siteConfig = await loadSiteConfig();
 
 interface Heading {
   depth: number;
@@ -128,8 +158,12 @@ for (const e of all) {
     <header class="header">
       <div class="header-inner">
         <a class="brand" href="/">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span>mdstack</span>
+          {siteConfig.brand.logo ? (
+            <img class="brand-logo" src={siteConfig.brand.logo} alt="" />
+          ) : (
+            <span class="brand-mark" aria-hidden="true"></span>
+          )}
+          {siteConfig.brand.text && <span>{siteConfig.brand.text}</span>}
         </a>
         <nav class="page-nav" aria-label="Pages">
           {pages.map((p) => (
@@ -219,8 +253,12 @@ for (const e of all) {
           <span class="brand-mark" aria-hidden="true"></span>
           <span>mdstack</span>
         </span>
-        <span class="footer-sep">|</span>
-        eXor404
+        {siteConfig.footer.copyright && (
+          <>
+            <span class="footer-sep">|</span>
+            {siteConfig.footer.copyright}
+          </>
+        )}
       </div>
     </footer>
 

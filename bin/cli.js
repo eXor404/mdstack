@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve, isAbsolute } from 'node:path';
-import { existsSync, statSync } from 'node:fs';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { dirname, resolve, isAbsolute, relative } from 'node:path';
+import { existsSync, statSync, writeFileSync } from 'node:fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,6 +10,31 @@ const APP_ROOT = resolve(__dirname, '..', 'app');
 const VALID_COMMANDS = new Set(['dev', 'build', 'preview']);
 const VALID_THEMES = new Set(['angular']);
 const DEFAULT_THEME = 'angular';
+const CONFIG_FILENAME = 'mdstack.config.js';
+
+const DEFAULT_CONFIG = `// mdstack site config — edit to customize the look of your site.
+// Re-run mdstack after saving to apply changes.
+
+export default {
+  brand: {
+    // Wordmark shown in the header next to the logo. Set to '' to hide.
+    text: 'mdstack',
+    // Path to a custom logo, absolute from this folder's root
+    // (e.g. '/images/logo.svg'). Leave null to use the built-in
+    // gradient mark.
+    logo: null,
+  },
+
+  // Theme. Currently only 'angular' ships with mdstack.
+  theme: 'angular',
+
+  footer: {
+    // Copyright / credit line shown at the bottom of every page.
+    // Set to '' to hide it entirely.
+    copyright: '',
+  },
+};
+`;
 
 function fail(msg) {
   console.error(`mdstack: ${msg}`);
@@ -19,7 +44,7 @@ function fail(msg) {
 function parseArgs(argv) {
   const args = argv.slice(2);
   let cmd = 'dev';
-  let theme = DEFAULT_THEME;
+  let theme = null;
   let dir;
 
   if (args[0] && VALID_COMMANDS.has(args[0])) {
@@ -41,9 +66,32 @@ function parseArgs(argv) {
   }
 
   if (!dir) fail(`Missing folder argument.\nUsage: mdstack [dev|build|preview] [--theme <name>] <folder>`);
-  if (!VALID_THEMES.has(theme)) fail(`Unknown theme: ${theme}. Available: ${[...VALID_THEMES].join(', ')}`);
 
   return { cmd, theme, dir };
+}
+
+function ensureDefaultConfig(source) {
+  const configPath = resolve(source, CONFIG_FILENAME);
+  if (existsSync(configPath)) return;
+  try {
+    writeFileSync(configPath, DEFAULT_CONFIG, 'utf8');
+    const rel = relative(process.cwd(), configPath) || configPath;
+    console.log(`mdstack: created ${rel} with defaults — edit it to customize`);
+  } catch (err) {
+    console.warn(`mdstack: couldn't write default config: ${err.message}`);
+  }
+}
+
+async function loadUserConfig(source) {
+  const configPath = resolve(source, CONFIG_FILENAME);
+  if (!existsSync(configPath)) return {};
+  try {
+    const mod = await import(pathToFileURL(configPath).href);
+    return mod.default ?? {};
+  } catch (err) {
+    console.warn(`mdstack: couldn't load ${CONFIG_FILENAME}: ${err.message}`);
+    return {};
+  }
 }
 
 function resolveSource(dir) {
@@ -54,8 +102,15 @@ function resolveSource(dir) {
   return abs;
 }
 
-const { cmd, theme, dir } = parseArgs(process.argv);
+const { cmd, theme: cliTheme, dir } = parseArgs(process.argv);
 const source = resolveSource(dir);
+
+ensureDefaultConfig(source);
+const userConfig = await loadUserConfig(source);
+
+const theme = cliTheme || userConfig.theme || DEFAULT_THEME;
+if (!VALID_THEMES.has(theme)) fail(`Unknown theme: ${theme}. Available: ${[...VALID_THEMES].join(', ')}`);
+
 process.env.MD_SOURCE = source;
 process.env.MD_THEME = theme;
 

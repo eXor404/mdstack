@@ -19,6 +19,25 @@ npx mdstack build ./my-docs
 
 The build output lands in `./my-docs/dist`.
 
+## Site config
+
+The first time you run mdstack against a folder, it drops a `mdstack.config.js` file in there with sensible defaults. Edit any of the fields and re-run mdstack to apply changes:
+
+```js
+export default {
+  brand: {
+    text: 'mdstack',          // wordmark next to the logo, '' to hide
+    logo: null,               // absolute path from source root, e.g. '/images/logo.svg'
+  },
+  theme: 'angular',           // currently only 'angular' ships
+  footer: {
+    copyright: '',            // shown at the bottom of every page; '' to hide
+  },
+};
+```
+
+The file lives at the root of your source folder and is excluded from the dev server, the built `dist/`, and the search palette. Delete it to regenerate the defaults.
+
 ## Frontmatter
 
 | Field | Purpose |

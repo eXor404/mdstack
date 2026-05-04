@@ -28,9 +28,11 @@ const MIME = {
 };
 
 const EXCLUDED_TOP = new Set(['dist', 'node_modules', '.git', '.astro', '.vscode', '.idea']);
+const EXCLUDED_FILES = new Set(['mdstack.config.js']);
 
 function isExcludedRel(rel) {
   if (!rel || rel === '.' || rel === '..') return true;
+  if (EXCLUDED_FILES.has(rel)) return true;
   const parts = rel.split(/[\\/]/);
   if (parts[0].startsWith('.')) return true;
   if (EXCLUDED_TOP.has(parts[0])) return true;

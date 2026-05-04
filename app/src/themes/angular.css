@@ -116,6 +116,12 @@ img, svg { display: block; max-width: 100%; }
   background: var(--grad); border-radius: 2px;
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
+.brand-logo {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  object-fit: cover;
+  display: block;
+}
 
 .page-nav {
   display: flex; align-items: center; gap: 4px;

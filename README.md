@@ -52,6 +52,7 @@ order: 2                 # nav sort order; lower comes first
 - Math: `$inline$` and `$$block$$` rendered server-side via KaTeX (fonts auto-bundled)
 - Mermaid diagrams: ` ```mermaid ` blocks render client-side and follow the active light/dark theme
 - GitHub-style callouts: `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` blockquotes get an icon, label, and accent border
+- Site config: a `mdstack.config.js` is auto-created in your folder on first run; edit it to set the header logo, brand text, theme, and footer copyright
 
 ## CLI
 
@@ -63,7 +64,6 @@ Available themes: `angular` (default).
 
 ## Roadmap
 
-- [ ] Config file (e.g. `mdstack.config.js`) for site-level branding: logo, header title, favicon, default theme, social links
 - [ ] Body-text search (palette currently indexes titles + H2/H3 only)
 - [ ] `keywords`, `author`, `license`, `repository`, `homepage` in `package.json`
 - [ ] Auto-generated `sitemap.xml` / `robots.txt`
