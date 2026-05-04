@@ -16,6 +16,7 @@ const themeFile = resolve(__dirname, 'src', 'themes', `${theme}.css`);
 const SHIKI_BY_THEME = {
   angular: 'github-dark',
   vue: 'material-theme-palenight',
+  nuxt: 'vitesse-dark',
 };
 const shikiTheme = SHIKI_BY_THEME[theme] ?? 'github-dark';
 
