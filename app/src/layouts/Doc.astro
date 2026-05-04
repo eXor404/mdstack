@@ -12,14 +12,17 @@ interface Props {
   title: string;
   currentId: string;
   headings: Heading[];
+  hideToc?: boolean;
 }
 
-const { title, currentId, headings } = Astro.props;
+const { title, currentId, headings, hideToc = false } = Astro.props;
+
+const HIDDEN_IDS = new Set(['footer', '404']);
 
 const all = await getCollection('docs');
 
 const pages = all
-  .filter((e) => e.id !== 'footer')
+  .filter((e) => !HIDDEN_IDS.has(e.id))
   .map((e) => ({
     id: e.id,
     title: e.data.title ?? e.id,
@@ -98,7 +101,7 @@ function extractH2H3(body: string): { depth: number; text: string; slug: string 
 type SearchItem = { kind: 'page' | 'heading'; title: string; href: string; page?: string };
 const searchIndex: SearchItem[] = [];
 for (const e of all) {
-  if (e.id === 'footer') continue;
+  if (HIDDEN_IDS.has(e.id)) continue;
   const pageTitle = (e.data.title ?? e.id) as string;
   const pageHref = e.id === 'index' ? '/' : `/${e.id}/`;
   searchIndex.push({ kind: 'page', title: pageTitle, href: pageHref });
@@ -151,7 +154,8 @@ for (const e of all) {
       </div>
     </header>
 
-    <div class="layout">
+    <div class={`layout${hideToc ? ' layout-no-toc' : ''}`}>
+      {!hideToc && (
       <aside class="toc" aria-label="On this page">
         <p class="toc-title">On this page</p>
         {tocGroups.length === 0 ? (
@@ -186,6 +190,7 @@ for (const e of all) {
           </ul>
         )}
       </aside>
+      )}
 
       <main class="content">
         <slot />

@@ -47,6 +47,7 @@ order: 2                 # nav sort order; lower comes first
 - ⌘K command palette over page titles + headings
 - Light / dark theme toggle
 - Auto TOC + scroll-spy in the sidebar
+- 404 page (default themed; override by adding a `404.md` to your folder)
 
 ## CLI
 
@@ -60,7 +61,6 @@ Available themes: `angular` (default).
 
 - [ ] Config file (e.g. `mdstack.config.js`) for site-level branding: logo, header title, favicon, default theme, social links
 - [ ] Body-text search (palette currently indexes titles + H2/H3 only)
-- [ ] Custom 404 page
 - [ ] `keywords`, `author`, `license`, `repository`, `homepage` in `package.json`
 - [ ] Heading anchor links (hover `#` to copy a deep link)
 - [ ] Math: `$inline$` / `$$block$$` via KaTeX
