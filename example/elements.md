@@ -222,7 +222,7 @@ A collapsible `<details>` block:
 
 A `<kbd>` chord: press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>.
 
-A `<mark>highlighted phrase</mark>` using the mark element.
+Use `<mark>` to render a <mark>highlighted phrase</mark> inline.
 
 ## Long section for scroll-spy
 
