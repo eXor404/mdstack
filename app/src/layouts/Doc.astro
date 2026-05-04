@@ -296,6 +296,38 @@ for (const e of all) {
         });
       })();
 
+      // Heading anchor links — hover # to copy a deep link
+      (() => {
+        const LINK_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+        const CHECK_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+        const headings = document.querySelectorAll('main.content :is(h1, h2, h3, h4)[id]');
+        headings.forEach((h) => {
+          if (h.querySelector('.heading-anchor')) return;
+          const a = document.createElement('a');
+          a.className = 'heading-anchor';
+          a.href = '#' + h.id;
+          a.setAttribute('aria-label', 'Copy link to section');
+          a.innerHTML = LINK_SVG;
+          a.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const url = location.origin + location.pathname + '#' + h.id;
+            try {
+              await navigator.clipboard.writeText(url);
+              a.classList.add('copied');
+              a.innerHTML = CHECK_SVG;
+              history.replaceState(null, '', '#' + h.id);
+              setTimeout(() => {
+                a.classList.remove('copied');
+                a.innerHTML = LINK_SVG;
+              }, 1500);
+            } catch {
+              location.hash = '#' + h.id;
+            }
+          });
+          h.appendChild(a);
+        });
+      })();
+
       // Scroll-spy for TOC
       (() => {
         const links = Array.from(document.querySelectorAll('[data-toc-link]'));

@@ -440,6 +440,39 @@ main.content strong {
 }
 main.content em { font-style: italic; }
 
+/* Heading anchor links — hover the heading to reveal */
+main.content .heading-anchor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1em;
+  height: 1.1em;
+  margin-left: 10px;
+  vertical-align: middle;
+  border: 0;
+  border-bottom: 0;
+  color: var(--text-dim);
+  opacity: 0;
+  transition: opacity 150ms ease-out, color 150ms ease-out, transform 150ms ease-out;
+}
+main.content :is(h1, h2, h3, h4):hover .heading-anchor,
+main.content .heading-anchor:focus-visible { opacity: 1; }
+main.content .heading-anchor:hover {
+  background: transparent;
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  color: var(--accent-orange);
+  border-bottom-color: transparent;
+  transform: rotate(-12deg);
+}
+main.content .heading-anchor.copied,
+main.content .heading-anchor.copied:hover {
+  color: var(--accent-green);
+  opacity: 1;
+  transform: none;
+}
+main.content .heading-anchor svg { display: block; width: 14px; height: 14px; }
+
 main.content del, main.content s {
   color: var(--text-dim);
   text-decoration: line-through;
