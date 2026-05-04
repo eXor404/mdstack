@@ -17,6 +17,7 @@ const SHIKI_BY_THEME = {
   angular: 'github-dark',
   vue: 'material-theme-palenight',
   nuxt: 'vitesse-dark',
+  homebrew: 'monokai',
 };
 const shikiTheme = SHIKI_BY_THEME[theme] ?? 'github-dark';
 
