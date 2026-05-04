@@ -106,13 +106,26 @@ const pagesColumn: FooterCol = {
 const visibleColumns: FooterCol[] = hasFooterMd ? footerColumns : [pagesColumn];
 const renderedColumns: FooterCol[] = [...visibleColumns].reverse();
 
-// ── Search index (titles + H2/H3 from every doc) ─────────────────
+// ── Search index (titles + H2/H3 + body text from every doc) ─────
 function slugify(s: string): string {
   return s.toLowerCase()
     .replace(/[`*_~]/g, '')
     .replace(/[^a-z0-9\s-]/g, '')
     .trim()
     .replace(/\s+/g, '-');
+}
+function flattenInline(s: string): string {
+  return s
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+    .replace(/~~([^~]+)~~/g, '$1')
+    .replace(/==([^=]+)==/g, '$1')
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/^[\s>*\-+]+/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 function extractH2H3(body: string): { depth: number; text: string; slug: string }[] {
   const out: { depth: number; text: string; slug: string }[] = [];
@@ -128,8 +141,37 @@ function extractH2H3(body: string): { depth: number; text: string; slug: string 
   }
   return out;
 }
+function extractSections(body: string): { heading: string | null; slug: string | null; text: string }[] {
+  type Sec = { heading: string | null; slug: string | null; lines: string[] };
+  const sections: Sec[] = [{ heading: null, slug: null, lines: [] }];
+  let inFence = false;
+  for (const raw of body.split('\n')) {
+    if (/^```/.test(raw)) { inFence = !inFence; continue; }
+    if (inFence) continue;
+    const h = raw.match(/^(#{1,6})\s+(.+?)\s*$/);
+    if (h) {
+      const depth = h[1].length;
+      const text = flattenInline(h[2]);
+      if (depth === 2 || depth === 3) {
+        sections.push({ heading: text, slug: slugify(text), lines: [] });
+      }
+      continue;
+    }
+    const flat = flattenInline(raw);
+    if (flat) sections[sections.length - 1].lines.push(flat);
+  }
+  return sections
+    .map((s) => ({ heading: s.heading, slug: s.slug, text: s.lines.join(' ') }))
+    .filter((s) => s.text.length > 0);
+}
 
-type SearchItem = { kind: 'page' | 'heading'; title: string; href: string; page?: string };
+type SearchItem = {
+  kind: 'page' | 'heading' | 'text';
+  title: string;
+  href: string;
+  page?: string;
+  body?: string;
+};
 const searchIndex: SearchItem[] = [];
 for (const e of all) {
   if (HIDDEN_IDS.has(e.id)) continue;
@@ -142,6 +184,15 @@ for (const e of all) {
       title: h.text,
       href: `${pageHref}#${h.slug}`,
       page: pageTitle,
+    });
+  }
+  for (const sec of extractSections(e.body ?? '')) {
+    searchIndex.push({
+      kind: 'text',
+      title: sec.heading ?? pageTitle,
+      href: sec.slug ? `${pageHref}#${sec.slug}` : pageHref,
+      page: pageTitle,
+      body: sec.text,
     });
   }
 }
@@ -418,26 +469,66 @@ for (const e of all) {
           { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
         ));
 
+        const KIND_BOOST = { page: 25, heading: 12, text: 0 };
+        const KIND_GLYPH = { page: '#', heading: '§', text: '¶' };
+
         const score = (item, q) => {
           const ql = q.toLowerCase();
           const t = item.title.toLowerCase();
           const p = (item.page || '').toLowerCase();
-          if (t === ql) return 100;
-          if (t.startsWith(ql)) return 80;
+          const b = (item.body || '').toLowerCase();
+          const boost = KIND_BOOST[item.kind] ?? 0;
+
+          if (t === ql) return 100 + boost;
+          if (t.startsWith(ql)) return 80 + boost;
           const ti = t.indexOf(ql);
-          if (ti >= 0) return 60 - ti;
-          if (p.includes(ql)) return 30;
+          if (ti >= 0) return 60 - Math.min(ti, 30) + boost;
+          if (p.includes(ql)) return 35 + boost;
+          if (b) {
+            const bi = b.indexOf(ql);
+            if (bi >= 0) return 25 - Math.min(bi / 50, 15);
+          }
           return -1;
         };
 
         const search = (q) => {
-          if (!q.trim()) return index.slice(0, 30);
+          const trimmed = q.trim();
+          if (!trimmed) {
+            return index.filter((it) => it.kind !== 'text').slice(0, 30);
+          }
+          const seenHrefs = new Set();
           return index
-            .map((item) => ({ item, s: score(item, q.trim()) }))
+            .map((item) => ({ item, s: score(item, trimmed) }))
             .filter((x) => x.s >= 0)
             .sort((a, b) => b.s - a.s)
+            .filter(({ item }) => {
+              // Dedupe: prefer earlier (higher-scored) entry per href
+              if (seenHrefs.has(item.href)) return false;
+              seenHrefs.add(item.href);
+              return true;
+            })
             .slice(0, 30)
             .map((x) => x.item);
+        };
+
+        const snippet = (text, q) => {
+          if (!text || !q) return '';
+          const lower = text.toLowerCase();
+          const ql = q.toLowerCase().trim();
+          const idx = ql ? lower.indexOf(ql) : -1;
+          if (idx < 0) {
+            return escapeHtml(text.length > 100 ? text.slice(0, 100) + '…' : text);
+          }
+          const start = Math.max(0, idx - 28);
+          const end = Math.min(text.length, idx + ql.length + 60);
+          const before = text.slice(start, idx);
+          const match = text.slice(idx, idx + ql.length);
+          const after = text.slice(idx + ql.length, end);
+          let out = '';
+          if (start > 0) out += '…';
+          out += escapeHtml(before) + '<mark>' + escapeHtml(match) + '</mark>' + escapeHtml(after);
+          if (end < text.length) out += '…';
+          return out;
         };
 
         const render = () => {
@@ -447,15 +538,23 @@ for (const e of all) {
             results.innerHTML = '<li class="palette-empty">No results</li>';
             return;
           }
-          results.innerHTML = filtered.map((item, i) => `
-            <li class="${i === 0 ? 'active' : ''}">
-              <a href="${escapeHtml(item.href)}" data-idx="${i}">
-                <span class="kind kind-${item.kind}">${item.kind === 'page' ? '#' : '§'}</span>
-                <span class="title">${escapeHtml(item.title)}</span>
-                ${item.page ? `<span class="meta">${escapeHtml(item.page)}</span>` : ''}
-              </a>
-            </li>
-          `).join('');
+          const q = input.value;
+          results.innerHTML = filtered.map((item, i) => {
+            const snip = item.kind === 'text' ? snippet(item.body, q) : '';
+            const meta = item.page && item.page !== item.title ? `<span class="meta">${escapeHtml(item.page)}</span>` : '';
+            return `
+              <li class="${i === 0 ? 'active' : ''}">
+                <a href="${escapeHtml(item.href)}" data-idx="${i}">
+                  <span class="kind kind-${item.kind}">${KIND_GLYPH[item.kind] || '·'}</span>
+                  <div class="result-main">
+                    <span class="title">${escapeHtml(item.title)}</span>
+                    ${snip ? `<span class="snippet">${snip}</span>` : ''}
+                  </div>
+                  ${meta}
+                </a>
+              </li>
+            `;
+          }).join('');
         };
 
         const setActive = (i) => {

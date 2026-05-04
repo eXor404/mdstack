@@ -44,7 +44,7 @@ order: 2                 # nav sort order; lower comes first
 - Image paths: relative (`./img.png`) **or** absolute from the source root (`/img.png`) — both resolve correctly in dev and in the build
 - Syntax-highlighted code blocks (Shiki, `github-dark`)
 - Footnotes, inline HTML, `<kbd>`, `<details>`
-- ⌘K command palette over page titles + headings
+- ⌘K command palette over page titles, headings, and body text — matches in prose show a snippet with the term highlighted
 - Light / dark theme toggle
 - Auto TOC + scroll-spy in the sidebar
 - 404 page (default themed; override by adding a `404.md` to your folder)
@@ -64,7 +64,6 @@ Available themes: `angular` (default).
 
 ## Roadmap
 
-- [ ] Body-text search (palette currently indexes titles + H2/H3 only)
 - [ ] `keywords`, `author`, `license`, `repository`, `homepage` in `package.json`
 - [ ] Auto-generated `sitemap.xml` / `robots.txt`
 
