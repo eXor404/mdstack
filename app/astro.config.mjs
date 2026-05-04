@@ -19,6 +19,12 @@ export default defineConfig({
         '~theme': themeFile,
       },
     },
+    server: {
+      // mdstack is a local CLI; deps live above APP_ROOT (or hoisted further
+      // up under npx). Disable strict fs serving so KaTeX fonts and other
+      // node_modules assets resolve regardless of where they're installed.
+      fs: { strict: false },
+    },
   },
   markdown: {
     remarkPlugins: [remarkImagePaths, remarkHighlight, remarkMath],
