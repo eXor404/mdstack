@@ -739,7 +739,7 @@ main.content .footnotes p { display: inline; }
   color: var(--text-muted);
   margin: 0;
 }
-.not-found-home {
+main.content .not-found-home {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -751,15 +751,19 @@ main.content .footnotes p { display: inline; }
   color: var(--text);
   font-size: 14px;
   font-weight: 500;
+  text-decoration: none;
   transition: border-color 150ms ease-out, background 150ms ease-out, transform 150ms ease-out;
 }
-.not-found-home:hover {
+main.content .not-found-home:hover {
   border-color: color-mix(in srgb, var(--accent-orange) 45%, var(--border-strong));
   background: var(--surface-2);
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  color: var(--text);
   transform: translateY(-1px);
 }
-.not-found-home svg { transition: transform 150ms ease-out; }
-.not-found-home:hover svg { transform: translateX(-2px); }
+main.content .not-found-home svg { transition: transform 150ms ease-out; }
+main.content .not-found-home:hover svg { transform: translateX(-2px); }
 
 /* ─────────────────────────────────────────────
    Footer
