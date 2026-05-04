@@ -11,8 +11,8 @@ export default {
     logo: null,
   },
 
-  // Theme. Built-in: 'angular' (default), 'vue', 'nuxt'.
-  theme: 'nuxt',
+  // Theme. Built-in: 'angular' (default), 'vue', 'nuxt', 'homebrew'.
+  theme: 'homebrew',
 
   footer: {
     // Copyright / credit line shown at the bottom of every page.
