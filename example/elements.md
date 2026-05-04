@@ -100,6 +100,25 @@ Task list:
 > >
 > > Useful for replies-within-replies.
 
+### Callouts
+
+GitHub-flavored callouts use the marker syntax `> [!TYPE]` on the first line of a blockquote.
+
+> [!NOTE]
+> Useful information that users should know, even when skimming the docs.
+
+> [!TIP]
+> Hold ⌘K to open the search palette and jump straight to a heading.
+
+> [!IMPORTANT]
+> mdstack ships as an npm package — `npx mdstack ./your-folder` is all you need.
+
+> [!WARNING]
+> Don't deploy `dist/` from a folder named `dist/` inside your source tree without rebuilding; stale assets will linger.
+
+> [!CAUTION]
+> Setting `MD_SOURCE` manually outside the CLI bypasses path validation. Use `npx mdstack` instead.
+
 ## Code
 
 Inline `const greeting = "hi"`. A typed block:

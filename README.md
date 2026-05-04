@@ -51,6 +51,7 @@ order: 2                 # nav sort order; lower comes first
 - Heading anchor links — hover any heading to reveal a link icon; click to copy a deep link to that section
 - Math: `$inline$` and `$$block$$` rendered server-side via KaTeX (fonts auto-bundled)
 - Mermaid diagrams: ` ```mermaid ` blocks render client-side and follow the active light/dark theme
+- GitHub-style callouts: `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` blockquotes get an icon, label, and accent border
 
 ## CLI
 
@@ -66,7 +67,6 @@ Available themes: `angular` (default).
 - [ ] Body-text search (palette currently indexes titles + H2/H3 only)
 - [ ] `keywords`, `author`, `license`, `repository`, `homepage` in `package.json`
 - [ ] Auto-generated `sitemap.xml` / `robots.txt`
-- [ ] Callouts: GitHub-style `> [!NOTE]` / `[!WARNING]` / `[!TIP]` blocks
 
 ## Requirements
 

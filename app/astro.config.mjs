@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import mdstackAssets from './integrations/mdstack-assets.js';
 import remarkImagePaths from './integrations/remark-image-paths.js';
 import remarkHighlight from './integrations/remark-highlight.js';
+import remarkCallouts from './integrations/remark-callouts.js';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
@@ -27,7 +28,7 @@ export default defineConfig({
     },
   },
   markdown: {
-    remarkPlugins: [remarkImagePaths, remarkHighlight, remarkMath],
+    remarkPlugins: [remarkImagePaths, remarkCallouts, remarkHighlight, remarkMath],
     rehypePlugins: [rehypeKatex],
     shikiConfig: {
       // Match the theme's code-block aesthetic.

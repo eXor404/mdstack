@@ -530,6 +530,39 @@ main.content blockquote {
 }
 main.content blockquote p:last-child { margin-bottom: 0; }
 
+/* GitHub-style callouts: > [!NOTE] / [!TIP] / [!IMPORTANT] / [!WARNING] / [!CAUTION] */
+main.content blockquote[data-callout] {
+  border-image: none;
+  border-left: 3px solid var(--callout-color, var(--border-strong));
+  background: color-mix(in srgb, var(--callout-color, var(--surface)) 8%, var(--surface));
+  color: var(--text);
+  padding: 14px 18px;
+}
+main.content blockquote[data-callout] .callout-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--callout-color, var(--text));
+}
+main.content blockquote[data-callout] .callout-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--callout-color, currentColor);
+}
+main.content blockquote[data-callout] .callout-icon svg { display: block; }
+
+main.content blockquote[data-callout="note"]      { --callout-color: var(--accent-blue); }
+main.content blockquote[data-callout="tip"]       { --callout-color: var(--accent-green); }
+main.content blockquote[data-callout="important"] { --callout-color: var(--accent-purple); }
+main.content blockquote[data-callout="warning"]   { --callout-color: var(--accent-yellow); }
+main.content blockquote[data-callout="caution"]   { --callout-color: var(--accent-red); }
+
 /* Inline code */
 main.content code {
   font-family: var(--mono);
