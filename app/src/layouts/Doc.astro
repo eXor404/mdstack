@@ -297,59 +297,6 @@ for (const e of all) {
         });
       })();
 
-      // Mermaid diagrams — lazy-loaded, re-renders on theme toggle
-      (() => {
-        const blocks = document.querySelectorAll('main.content pre[data-language="mermaid"], main.content pre code.language-mermaid');
-        if (blocks.length === 0) return;
-
-        const divs = [];
-        blocks.forEach((el) => {
-          const pre = el.tagName === 'PRE' ? el : el.closest('pre');
-          if (!pre) return;
-          const code = pre.querySelector('code');
-          const src = ((code ? code.textContent : pre.textContent) || '').replace(/\n$/, '');
-          const div = document.createElement('div');
-          div.className = 'mermaid';
-          div.dataset.source = src;
-          div.textContent = src;
-          pre.parentNode.replaceChild(div, pre);
-          divs.push(div);
-        });
-
-        let mermaidLib = null;
-        let renderId = 0;
-        const render = async () => {
-          const myId = ++renderId;
-          if (!mermaidLib) {
-            const mod = await import('mermaid');
-            mermaidLib = mod.default;
-          }
-          if (myId !== renderId) return;
-          const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-          mermaidLib.initialize({
-            startOnLoad: false,
-            theme: isLight ? 'default' : 'dark',
-            fontFamily: 'inherit',
-            securityLevel: 'loose',
-          });
-          divs.forEach((d) => {
-            d.removeAttribute('data-processed');
-            d.innerHTML = d.dataset.source;
-          });
-          try {
-            await mermaidLib.run({ nodes: divs });
-          } catch (err) {
-            console.error('mermaid render failed', err);
-          }
-        };
-
-        render();
-
-        new MutationObserver((muts) => {
-          if (muts.some((m) => m.attributeName === 'data-theme')) render();
-        }).observe(document.documentElement, { attributes: true });
-      })();
-
       // Heading anchor links — hover # to copy a deep link
       (() => {
         const LINK_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
@@ -539,6 +486,63 @@ for (const e of all) {
         results.addEventListener('click', (e) => {
           if (e.target.closest('a[data-idx]')) close();
         });
+      })();
+    </script>
+
+    <script>
+      // Mermaid diagrams — bundled (NOT is:inline) so Vite resolves the
+      // dynamic import('mermaid') into a real chunk. The lib only loads
+      // on pages that actually contain a ```mermaid block.
+      (() => {
+        const blocks = document.querySelectorAll('main.content pre[data-language="mermaid"], main.content pre code.language-mermaid');
+        if (blocks.length === 0) return;
+
+        const divs = [];
+        blocks.forEach((el) => {
+          const pre = el.tagName === 'PRE' ? el : el.closest('pre');
+          if (!pre) return;
+          const code = pre.querySelector('code');
+          const src = ((code ? code.textContent : pre.textContent) || '').replace(/\n$/, '');
+          const div = document.createElement('div');
+          div.className = 'mermaid';
+          div.dataset.source = src;
+          div.textContent = src;
+          pre.parentNode.replaceChild(div, pre);
+          divs.push(div);
+        });
+
+        let mermaidLib: any = null;
+        let renderId = 0;
+        const render = async () => {
+          const myId = ++renderId;
+          if (!mermaidLib) {
+            const mod = await import('mermaid');
+            mermaidLib = mod.default;
+          }
+          if (myId !== renderId) return;
+          const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+          mermaidLib.initialize({
+            startOnLoad: false,
+            theme: isLight ? 'default' : 'dark',
+            fontFamily: 'inherit',
+            securityLevel: 'loose',
+          });
+          divs.forEach((d) => {
+            d.removeAttribute('data-processed');
+            d.innerHTML = d.dataset.source ?? '';
+          });
+          try {
+            await mermaidLib.run({ nodes: divs });
+          } catch (err) {
+            console.error('mermaid render failed', err);
+          }
+        };
+
+        render();
+
+        new MutationObserver((muts) => {
+          if (muts.some((m) => m.attributeName === 'data-theme')) render();
+        }).observe(document.documentElement, { attributes: true });
       })();
     </script>
   </body>
