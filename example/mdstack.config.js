@@ -11,8 +11,8 @@ export default {
     logo: null,
   },
 
-  // Theme. Currently only 'angular' ships with mdstack.
-  theme: 'angular',
+  // Theme. Built-in: 'angular' (default), 'vue'.
+  theme: 'vue',
 
   footer: {
     // Copyright / credit line shown at the bottom of every page.
