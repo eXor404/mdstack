@@ -4,6 +4,8 @@ import { dirname, resolve } from 'node:path';
 import mdstackAssets from './integrations/mdstack-assets.js';
 import remarkImagePaths from './integrations/remark-image-paths.js';
 import remarkHighlight from './integrations/remark-highlight.js';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const theme = process.env.MD_THEME || 'angular';
@@ -19,7 +21,8 @@ export default defineConfig({
     },
   },
   markdown: {
-    remarkPlugins: [remarkImagePaths, remarkHighlight],
+    remarkPlugins: [remarkImagePaths, remarkHighlight, remarkMath],
+    rehypePlugins: [rehypeKatex],
     shikiConfig: {
       // Match the theme's code-block aesthetic.
       theme: 'github-dark',

@@ -189,6 +189,42 @@ Inline HTML `<img>` tags are also rewritten, so you can size them:
 
 <img src="./images/sample.svg" alt="mdstack sample, sized via HTML" width="320" />
 
+## Math
+
+Inline math compiles via KaTeX: $E = mc^2$, $\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$, and $\nabla \cdot \mathbf{E} = \frac{\rho}{\varepsilon_0}$.
+
+Block math gets its own padded container:
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}
+$$
+
+$$
+\binom{n}{k} = \frac{n!}{k!\,(n-k)!}
+$$
+
+## Diagrams
+
+Mermaid blocks render client-side and follow the active theme:
+
+```mermaid
+flowchart LR
+  A[Markdown folder] --> B{mdstack CLI}
+  B -->|dev| C[Vite dev server]
+  B -->|build| D[Static dist/]
+  D --> E[Docker / S3 / Vercel]
+```
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant CLI as mdstack
+  participant Astro
+  User->>CLI: npx mdstack ./docs
+  CLI->>Astro: spawn dev server
+  Astro-->>User: http://localhost:4321
+```
+
 ## Horizontal rule
 
 Above the line.

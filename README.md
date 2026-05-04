@@ -49,6 +49,8 @@ order: 2                 # nav sort order; lower comes first
 - Auto TOC + scroll-spy in the sidebar
 - 404 page (default themed; override by adding a `404.md` to your folder)
 - Heading anchor links — hover any heading to reveal a link icon; click to copy a deep link to that section
+- Math: `$inline$` and `$$block$$` rendered server-side via KaTeX (fonts auto-bundled)
+- Mermaid diagrams: ` ```mermaid ` blocks render client-side and follow the active light/dark theme
 
 ## CLI
 
@@ -63,10 +65,8 @@ Available themes: `angular` (default).
 - [ ] Config file (e.g. `mdstack.config.js`) for site-level branding: logo, header title, favicon, default theme, social links
 - [ ] Body-text search (palette currently indexes titles + H2/H3 only)
 - [ ] `keywords`, `author`, `license`, `repository`, `homepage` in `package.json`
-- [ ] Math: `$inline$` / `$$block$$` via KaTeX
 - [ ] Auto-generated `sitemap.xml` / `robots.txt`
 - [ ] Callouts: GitHub-style `> [!NOTE]` / `[!WARNING]` / `[!TIP]` blocks
-- [ ] Mermaid diagrams: ` ```mermaid ` blocks
 
 ## Requirements
 
