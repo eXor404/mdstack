@@ -299,16 +299,17 @@ for (const e of all) {
 
       // Mermaid diagrams — lazy-loaded, re-renders on theme toggle
       (() => {
-        const blocks = document.querySelectorAll('main.content pre code[data-language="mermaid"], main.content pre code.language-mermaid');
+        const blocks = document.querySelectorAll('main.content pre[data-language="mermaid"], main.content pre code.language-mermaid');
         if (blocks.length === 0) return;
 
         const divs = [];
-        blocks.forEach((code) => {
-          const pre = code.closest('pre');
+        blocks.forEach((el) => {
+          const pre = el.tagName === 'PRE' ? el : el.closest('pre');
           if (!pre) return;
+          const code = pre.querySelector('code');
+          const src = ((code ? code.textContent : pre.textContent) || '').replace(/\n$/, '');
           const div = document.createElement('div');
           div.className = 'mermaid';
-          const src = (code.textContent || '').replace(/\n$/, '');
           div.dataset.source = src;
           div.textContent = src;
           pre.parentNode.replaceChild(div, pre);
