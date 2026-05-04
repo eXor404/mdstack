@@ -23,12 +23,22 @@ Each level h1–h6 has its own treatment. Only `h2` and `h3` show up in the left
 
 A regular paragraph. **Bold uses the brand gradient.** *Italic just changes the slant.* You can combine ***both at once.***
 
-GitHub-flavored markdown supports ~~strikethrough~~ via tildes.
+GitHub-flavored markdown supports ~~strikethrough~~ via tildes, and `==` wraps a ==highlighted phrase== using mdstack's mark extension.
 
 Inline `code` renders in the mono stack with a tinted background. A keyboard shortcut like <kbd>Cmd</kbd> + <kbd>K</kbd> uses inline HTML.
 
 A line break with two trailing spaces  
 ends up as a soft break inside the same paragraph.
+
+## Strikethrough & highlight
+
+Strike out outdated content with double tildes:
+
+> The release ~~ships on Friday~~ is now scheduled for next Tuesday.
+
+Highlight key phrases with double equals — handy for callouts, search results, or drawing the eye to ==the part that actually matters==. You can chain several: ==first==, ==second==, and ==third==. Inside other inline formatting works too: **bold with ==a highlight== inside** and *italic with ==another one==*.
+
+Both also work via inline HTML: <del>removed</del> and <mark>marked</mark>.
 
 ## Links
 
