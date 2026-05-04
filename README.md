@@ -60,7 +60,7 @@ order: 2                 # nav sort order; lower comes first
 mdstack [dev|build|preview] [--theme <name>] <folder>
 ```
 
-Available themes: `angular` (default).
+Available themes: `angular` (default, dark gradient editorial), `vue` (clean docs aesthetic à la vuejs.org with always-dark Palenight code blocks).
 
 ## Roadmap
 

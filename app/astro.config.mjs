@@ -12,6 +12,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const theme = process.env.MD_THEME || 'angular';
 const themeFile = resolve(__dirname, 'src', 'themes', `${theme}.css`);
 
+// Shiki highlighter paired with each mdstack theme.
+const SHIKI_BY_THEME = {
+  angular: 'github-dark',
+  vue: 'material-theme-palenight',
+};
+const shikiTheme = SHIKI_BY_THEME[theme] ?? 'github-dark';
+
 export default defineConfig({
   integrations: [mdstackAssets()],
   vite: {
@@ -32,7 +39,7 @@ export default defineConfig({
     rehypePlugins: [rehypeKatex],
     shikiConfig: {
       // Match the theme's code-block aesthetic.
-      theme: 'github-dark',
+      theme: shikiTheme,
     },
   },
 });

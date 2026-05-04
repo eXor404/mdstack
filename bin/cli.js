@@ -8,7 +8,7 @@ const __dirname = dirname(__filename);
 const APP_ROOT = resolve(__dirname, '..', 'app');
 
 const VALID_COMMANDS = new Set(['dev', 'build', 'preview']);
-const VALID_THEMES = new Set(['angular']);
+const VALID_THEMES = new Set(['angular', 'vue']);
 const DEFAULT_THEME = 'angular';
 const CONFIG_FILENAME = 'mdstack.config.js';
 
@@ -25,7 +25,7 @@ export default {
     logo: null,
   },
 
-  // Theme. Currently only 'angular' ships with mdstack.
+  // Theme. Built-in: 'angular' (default), 'vue'.
   theme: 'angular',
 
   footer: {
