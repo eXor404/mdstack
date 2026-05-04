@@ -17,6 +17,6 @@ export default {
   footer: {
     // Copyright / credit line shown at the bottom of every page.
     // Set to '' to hide it entirely.
-    copyright: 'eXor404',
+    copyright: '© eXor404',
   },
 };
