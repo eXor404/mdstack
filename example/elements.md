@@ -163,6 +163,22 @@ With column alignment:
 | `npm`     | `pnpm`      | `yarn`     |
 | short     | the longest | medium-ish |
 
+## Images
+
+Drop image files anywhere alongside your markdown — `mdstack` serves them in dev and copies them into `dist/` on build. Both **relative** and **absolute** (root-from-source) paths work:
+
+Relative path (`./images/sample.svg`):
+
+![mdstack sample, relative path](./images/sample.svg)
+
+Absolute path from source root (`/images/sample.svg`):
+
+![mdstack sample, absolute path](/images/sample.svg)
+
+Inline HTML `<img>` tags are also rewritten, so you can size them:
+
+<img src="./images/sample.svg" alt="mdstack sample, sized via HTML" width="320" />
+
 ## Horizontal rule
 
 Above the line.
