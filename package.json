@@ -8,7 +8,13 @@
   },
   "files": [
     "bin",
-    "app"
+    "app/astro.config.mjs",
+    "app/package.json",
+    "app/integrations",
+    "app/public",
+    "app/src",
+    "LICENSE",
+    "README.md"
   ],
   "keywords": [
     "markdown",
@@ -33,7 +39,8 @@
   "scripts": {
     "dev": "node bin/cli.js dev ./example",
     "build": "node bin/cli.js build ./example",
-    "preview": "node bin/cli.js preview ./example"
+    "preview": "node bin/cli.js preview ./example",
+    "prepublishOnly": "node scripts/prepublish-check.mjs"
   },
   "engines": {
     "node": ">=18"
