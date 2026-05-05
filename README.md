@@ -9,9 +9,9 @@ Zero-config static-site CLI. Point it at a folder of `.md` files and `mdstack` e
 ## Quick start
 
 ```bash
-npx mdstack ./docs            # dev server with HMR
-npx mdstack build ./docs      # static build → ./docs/dist/
-npx mdstack preview ./docs    # serve the built dist/
+npx @exor404/mdstack ./docs            # dev server with HMR
+npx @exor404/mdstack build ./docs      # static build → ./docs/dist/
+npx @exor404/mdstack preview ./docs    # serve the built dist/
 ```
 
 ## Folder layout

@@ -1,5 +1,5 @@
 {
-  "name": "mdstack",
+  "name": "@exor404/mdstack",
   "version": "0.1.0",
   "description": "Drop a folder of markdown files, get a rendered site.",
   "type": "module",
