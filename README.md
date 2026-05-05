@@ -59,7 +59,7 @@ order: 2                 # nav sort order; lower comes first
 
 ## Configuration
 
-On first run, `mdstack` creates a `mdstack.config.js` in your folder. Edit it to customize the brand, theme, footer, and public site URL:
+On first run, `mdstack` creates a `mdstack.config.js` in your folder, and — if the folder has no markdown yet — drops a starter `index.md` next to it so you get a working homepage immediately. Edit the config to customize the brand, theme, footer, and public site URL:
 
 ```js
 export default {
