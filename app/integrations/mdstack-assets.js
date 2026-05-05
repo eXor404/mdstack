@@ -1,6 +1,7 @@
 import { promises as fs } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { resolve, relative, extname, join, dirname, sep } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const MIME = {
   '.png': 'image/png',
@@ -109,8 +110,11 @@ export default function mdstackAssets() {
           }
         });
       },
-      'astro:build:done': async ({ dir, logger }) => {
+      'astro:build:done': async ({ dir, pages, logger }) => {
         const outDir = fileURLToPath(dir);
+        const log = logger?.info?.bind(logger) ?? console.log;
+        const warn = logger?.warn?.bind(logger) ?? console.warn;
+
         let count = 0;
         for await (const { full, rel } of walkAssets(source)) {
           const dest = join(outDir, rel);
@@ -119,10 +123,88 @@ export default function mdstackAssets() {
           count++;
         }
         if (count > 0) {
-          const log = logger?.info?.bind(logger) ?? console.log;
           log(`copied ${count} asset${count === 1 ? '' : 's'} from source folder`);
         }
+
+        await emitSeoFiles({ source, outDir, pages, log, warn });
       },
     },
   };
+}
+
+async function loadSiteConfig(source) {
+  const cfgPath = resolve(source, 'mdstack.config.js');
+  if (!existsSync(cfgPath)) return {};
+  try {
+    const mod = await import(pathToFileURL(cfgPath).href);
+    return mod.default ?? {};
+  } catch {
+    return {};
+  }
+}
+
+function normalizeSite(site) {
+  if (!site || typeof site !== 'string') return '';
+  return site.trim().replace(/\/+$/, '');
+}
+
+function pageUrl(site, pathname) {
+  let p = pathname ?? '';
+  if (!p.startsWith('/')) p = '/' + p;
+  // Astro emits routes with trailing slashes by default; preserve as-is.
+  return site + p;
+}
+
+function buildSitemap(site, pages) {
+  const urls = pages
+    .map((p) => p.pathname ?? '')
+    .filter((p) => !/^\/?404\/?$/.test(p))
+    .map((p) => `  <url><loc>${escapeXml(pageUrl(site, p))}</loc></url>`)
+    .join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>
+`;
+}
+
+function buildRobots(site) {
+  const lines = ['User-agent: *', 'Allow: /'];
+  if (site) lines.push('', `Sitemap: ${site}/sitemap.xml`);
+  return lines.join('\n') + '\n';
+}
+
+function escapeXml(s) {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+async function emitSeoFiles({ source, outDir, pages, log, warn }) {
+  const cfg = await loadSiteConfig(source);
+  const site = normalizeSite(cfg.site);
+
+  const sitemapPath = join(outDir, 'sitemap.xml');
+  const robotsPath = join(outDir, 'robots.txt');
+
+  // Honor user-supplied files: walkAssets already copied them from source.
+  const userSitemap = existsSync(sitemapPath);
+  const userRobots = existsSync(robotsPath);
+
+  if (!userSitemap) {
+    if (site) {
+      await fs.writeFile(sitemapPath, buildSitemap(site, pages || []), 'utf8');
+      log(`generated sitemap.xml (${(pages || []).length} routes)`);
+    } else {
+      warn('no `site` URL in mdstack.config.js — skipped sitemap.xml');
+    }
+  }
+
+  if (!userRobots) {
+    await fs.writeFile(robotsPath, buildRobots(site), 'utf8');
+    log(site ? 'generated robots.txt with sitemap reference' : 'generated robots.txt (no sitemap — set `site` in mdstack.config.js)');
+  }
 }

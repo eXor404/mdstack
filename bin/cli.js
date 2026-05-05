@@ -28,6 +28,11 @@ export default {
   // Theme. Built-in: 'angular' (default), 'vue', 'nuxt', 'homebrew'.
   theme: 'angular',
 
+  // Public URL of your site (no trailing slash). Used to generate
+  // sitemap.xml and the Sitemap line in robots.txt at build time.
+  // Leave '' to skip sitemap generation.
+  site: '',
+
   footer: {
     // Copyright / credit line shown at the bottom of every page.
     // Set to '' to hide it entirely.

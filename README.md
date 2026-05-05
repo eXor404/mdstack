@@ -52,7 +52,8 @@ order: 2                 # nav sort order; lower comes first
 - Math: `$inline$` and `$$block$$` rendered server-side via KaTeX (fonts auto-bundled)
 - Mermaid diagrams: ` ```mermaid ` blocks render client-side and follow the active light/dark theme
 - GitHub-style callouts: `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` blockquotes get an icon, label, and accent border
-- Site config: a `mdstack.config.js` is auto-created in your folder on first run; edit it to set the header logo, brand text, theme, and footer copyright
+- Site config: a `mdstack.config.js` is auto-created in your folder on first run; edit it to set the header logo, brand text, theme, footer copyright, and public site URL
+- SEO: builds emit `robots.txt` automatically, plus a `sitemap.xml` whenever `site` is set in `mdstack.config.js`. Drop your own `robots.txt` or `sitemap.xml` in the source folder to override.
 
 ## CLI
 
