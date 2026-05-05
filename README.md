@@ -4,14 +4,34 @@
 
 Zero-config static-site CLI. Point it at a folder of `.md` files and `mdstack` either serves them in dev or builds a self-contained `dist/` you can deploy anywhere static (Docker, Vercel, Netlify, S3, GitHub Pages…).
 
+[![npm](https://img.shields.io/npm/v/@exor404/mdstack.svg)](https://www.npmjs.com/package/@exor404/mdstack)
+[![license](https://img.shields.io/npm/l/@exor404/mdstack.svg)](./LICENSE)
+
 > **Status:** pre-1.0, provisional. APIs and CLI flags may change before `0.x → 1.0`.
+
+## Install
+
+```bash
+# Zero-install — runs the published version directly
+npx @exor404/mdstack ./docs
+
+# Or install locally
+npm i -D @exor404/mdstack
+npx mdstack ./docs
+
+# Or globally
+npm i -g @exor404/mdstack
+mdstack ./docs
+```
+
+The package id is `@exor404/mdstack`; the installed CLI binary is `mdstack`.
 
 ## Quick start
 
 ```bash
-npx @exor404/mdstack ./docs            # dev server with HMR
-npx @exor404/mdstack build ./docs      # static build → ./docs/dist/
-npx @exor404/mdstack preview ./docs    # serve the built dist/
+mdstack ./docs            # dev server with HMR
+mdstack build ./docs      # static build → ./docs/dist/
+mdstack preview ./docs    # serve the built dist/
 ```
 
 ## Folder layout
@@ -37,23 +57,47 @@ order: 2                 # nav sort order; lower comes first
 ---
 ```
 
-## Markdown features
+## Configuration
+
+On first run, `mdstack` creates a `mdstack.config.js` in your folder. Edit it to customize the brand, theme, footer, and public site URL:
+
+```js
+export default {
+  brand: { text: 'My docs', logo: null },
+  theme: 'angular',                // 'angular' | 'vue' | 'nuxt' | 'homebrew'
+  site: 'https://example.com',     // enables sitemap.xml + Sitemap: in robots.txt
+  footer: { copyright: '© My Co' },
+};
+```
+
+## Features
+
+**Markdown**
 
 - GFM: tables, task lists, strikethrough (`~~…~~`)
-- Highlight extension: `==text==` renders as `<mark>`
-- Image paths: relative (`./img.png`) **or** absolute from the source root (`/img.png`) — both resolve correctly in dev and in the build
-- Syntax-highlighted code blocks (Shiki, `github-dark`)
+- `==highlight==` renders as `<mark>`
 - Footnotes, inline HTML, `<kbd>`, `<details>`
-- ⌘K command palette over page titles, headings, and body text — matches in prose show a snippet with the term highlighted
+- Math: `$inline$` and `$$block$$` rendered server-side via KaTeX (fonts auto-bundled)
+- Mermaid diagrams in ` ```mermaid ` blocks (follows the active light/dark theme)
+- GitHub-style callouts: `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`
+- Syntax-highlighted code blocks (Shiki — theme-matched per built-in theme)
+- Image paths: relative (`./img.png`) **or** absolute from the source root (`/img.png`)
+
+**Site**
+
 - Light / dark theme toggle
 - Auto TOC + scroll-spy in the sidebar
+- ⌘K command palette over titles, headings, and body text — prose matches show a highlighted snippet
+- Heading anchor links — hover any heading, click to copy a deep link
 - 404 page (default themed; override by adding a `404.md` to your folder)
-- Heading anchor links — hover any heading to reveal a link icon; click to copy a deep link to that section
-- Math: `$inline$` and `$$block$$` rendered server-side via KaTeX (fonts auto-bundled)
-- Mermaid diagrams: ` ```mermaid ` blocks render client-side and follow the active light/dark theme
-- GitHub-style callouts: `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` blockquotes get an icon, label, and accent border
-- Site config: a `mdstack.config.js` is auto-created in your folder on first run; edit it to set the header logo, brand text, theme, footer copyright, and public site URL
-- SEO: builds emit `robots.txt` automatically, plus a `sitemap.xml` whenever `site` is set in `mdstack.config.js`. Drop your own `robots.txt` or `sitemap.xml` in the source folder to override.
+- Four built-in themes (see below)
+
+**Build & SEO**
+
+- Self-contained `dist/`: every non-`.md` file in the source folder ships through
+- `robots.txt` emitted on every build
+- `sitemap.xml` emitted when `site` is set in `mdstack.config.js` (404 routes excluded)
+- A user-supplied `robots.txt` or `sitemap.xml` in the source folder always wins
 
 ## CLI
 
@@ -61,8 +105,29 @@ order: 2                 # nav sort order; lower comes first
 mdstack [dev|build|preview] [--theme <name>] <folder>
 ```
 
-Available themes: `angular` (default, dark gradient editorial), `vue` (clean docs aesthetic à la vuejs.org with always-dark Palenight code blocks), `nuxt` (electric-green Nuxt UI Pro feel with subtle dot-grid, file-tab code blocks, and animated link underlines), `homebrew` (aggressively minimal GitHub-Pages-Jekyll vibe — single column, light-only, no chrome).
+| Command   | What it does                                  |
+| --------- | --------------------------------------------- |
+| `dev`     | Dev server with HMR (default if command omitted) |
+| `build`   | Static build to `<folder>/dist/`              |
+| `preview` | Serve the built `dist/`                       |
+
+Flags:
+
+- `--theme, -t <name>` — override the `theme` from `mdstack.config.js`
+
+## Themes
+
+| Name       | Vibe                                                                                                  |
+| ---------- | ----------------------------------------------------------------------------------------------------- |
+| `angular`  | Default. Dark gradient editorial.                                                                     |
+| `vue`      | Clean docs aesthetic à la vuejs.org. Always-dark Palenight code blocks.                               |
+| `nuxt`     | Electric-green Nuxt UI Pro feel. Subtle dot-grid, file-tab code blocks, animated link underlines.     |
+| `homebrew` | Aggressively minimal GitHub-Pages-Jekyll vibe — single column, light-only, no chrome.                 |
 
 ## Requirements
 
 Node 18+.
+
+## License
+
+[MIT](./LICENSE)
