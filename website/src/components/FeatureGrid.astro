@@ -1,0 +1,160 @@
+---
+const features = [
+  {
+    title: 'Markdown that does more',
+    body: 'GFM tables, footnotes, ==highlights==, <kbd>, GitHub-style callouts, and <details>.',
+    icon: 'markdown',
+  },
+  {
+    title: 'Math, server-side',
+    body: 'Inline $a^2 + b^2$ and block $$\\int$$ rendered with KaTeX. Fonts auto-bundled.',
+    icon: 'sigma',
+  },
+  {
+    title: 'Mermaid diagrams',
+    body: 'Fenced ```mermaid blocks render as SVG and follow the active light/dark theme.',
+    icon: 'flow',
+  },
+  {
+    title: 'Syntax highlighting',
+    body: 'Shiki tokenizes every fenced code block, theme-matched per built-in theme.',
+    icon: 'code',
+  },
+  {
+    title: '⌘K command palette',
+    body: 'Fuzzy search over titles, headings, and body prose. Matches show a highlighted snippet.',
+    icon: 'palette',
+  },
+  {
+    title: 'Auto TOC + scroll-spy',
+    body: 'The sidebar fills itself from your headings. Active section highlights as you scroll.',
+    icon: 'list',
+  },
+  {
+    title: 'Light & dark out of the box',
+    body: 'Toggle in the header, persisted in localStorage. Honors the system preference on first load.',
+    icon: 'theme',
+  },
+  {
+    title: 'Real builds',
+    body: 'Self-contained dist/ with robots.txt and sitemap.xml. Deploy anywhere static.',
+    icon: 'package',
+  },
+  {
+    title: 'Four themes',
+    body: 'angular, vue, nuxt, homebrew. Pick one, override with --theme any time.',
+    icon: 'swatches',
+  },
+];
+---
+
+<section id="features" class="features">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Features</p>
+      <h2>Everything you need. Nothing you don't.</h2>
+      <p>The features below are what mdstack ships with today — no plugin marketplace, no hidden tiers.</p>
+    </div>
+
+    <ul class="feature-grid">
+      {features.map((f, i) => (
+        <li class="feature-card" data-reveal style={`--reveal-delay:${i * 60}ms`}>
+          <span class="feature-icon" aria-hidden="true">
+            {f.icon === 'markdown' && (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 15V9l3 3 3-3v6"/><path d="M17 9v6"/><path d="m14.5 13 2.5 2.5L19.5 13"/></svg>
+            )}
+            {f.icon === 'sigma' && (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 7V5H6l6 7-6 7h12v-2"/></svg>
+            )}
+            {f.icon === 'flow' && (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><path d="M6 9v3h12V9"/><path d="M12 12v3"/></svg>
+            )}
+            {f.icon === 'code' && (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            )}
+            {f.icon === 'palette' && (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8"/><path d="M8 13h5"/></svg>
+            )}
+            {f.icon === 'list' && (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>
+            )}
+            {f.icon === 'theme' && (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor" opacity="0.18"/></svg>
+            )}
+            {f.icon === 'package' && (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg>
+            )}
+            {f.icon === 'swatches' && (
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            )}
+          </span>
+          <h3 class="feature-title">{f.title}</h3>
+          <p class="feature-body">{f.body}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .feature-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .feature-card {
+    padding: 22px 22px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color var(--t-fast), background var(--t-fast), transform var(--t-fast);
+  }
+  .feature-card:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+    transform: translateY(-2px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .feature-card:hover { transform: none; }
+  }
+  .feature-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--grad-soft);
+    color: var(--accent-orange);
+    border: 1px solid color-mix(in srgb, var(--accent-orange) 28%, var(--border));
+  }
+  [data-theme='light'] .feature-icon {
+    color: #c43a08;
+    border-color: color-mix(in srgb, #ff4500 35%, var(--border));
+  }
+  .feature-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .feature-body {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  @media (max-width: 1080px) {
+    .feature-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+</style>

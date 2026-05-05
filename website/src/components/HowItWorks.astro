@@ -1,0 +1,180 @@
+---
+const steps = [
+  {
+    n: '1',
+    label: 'POINT',
+    title: 'A folder of markdown',
+    lines: 'docs/\n├ index.md\n├ guide.md\n└ images/',
+  },
+  {
+    n: '2',
+    label: 'RUN',
+    title: 'One command',
+    lines: '$ mdstack ./docs\n\n→ HMR dev server\n→ live reload\n→ ⌘K palette',
+  },
+  {
+    n: '3',
+    label: 'SHIP',
+    title: 'A static site',
+    lines: 'dist/\n├ index.html\n├ guide/...\n├ sitemap.xml\n└ robots.txt',
+  },
+];
+---
+
+<section id="how" class="how">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">How it works</p>
+      <h2>From folder to site in one command.</h2>
+      <p>No config to write. No framework to learn. Just point mdstack at a folder.</p>
+    </div>
+
+    <div class="how-grid" data-how-root>
+      {steps.map((step, i) => [
+        <article class="how-card" style={`--delay:${i * 80}ms`}>
+          <header class="how-head">
+            <span class="how-n">0{step.n}</span>
+            <span class="how-label">{step.label}</span>
+          </header>
+          <p class="how-title">{step.title}</p>
+          <pre class="how-pre"><code>{step.lines}</code></pre>
+        </article>,
+        i < steps.length - 1 && (
+          <div class="how-arrow-cell" aria-hidden="true" style={`--delay:${i * 80 + 200}ms`}>
+            <svg viewBox="0 0 80 24" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id={`how-grad-${i}`} x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0%" stop-color="#ff0080"/>
+                  <stop offset="50%" stop-color="#ff4500"/>
+                  <stop offset="100%" stop-color="#ffa500"/>
+                </linearGradient>
+              </defs>
+              <path class="how-arrow-line" d="M 6 12 L 64 12" stroke={`url(#how-grad-${i})`} stroke-width="2" stroke-linecap="round" fill="none" />
+              <path class="how-arrow-head" d="M 58 6 L 70 12 L 58 18" stroke={`url(#how-grad-${i})`} stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            </svg>
+          </div>
+        ),
+      ])}
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector('[data-how-root]');
+  if (root) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      root.classList.add('how-revealed');
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            root.classList.add('how-revealed');
+            io.disconnect();
+          }
+        }
+      }, { threshold: 0.2 });
+      io.observe(root);
+    }
+  }
+</script>
+
+<style>
+  .how-grid {
+    display: grid;
+    gap: 20px;
+    align-items: stretch;
+    grid-template-columns: 1fr;
+  }
+
+  .how-card {
+    position: relative;
+    padding: 22px 22px 18px;
+    border-radius: 14px;
+    background:
+      linear-gradient(var(--surface), var(--surface)) padding-box,
+      var(--grad) border-box;
+    border: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 220px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
+    transition-delay: var(--delay, 0ms);
+  }
+  .how-revealed .how-card { opacity: 1; transform: none; }
+
+  .how-head { display: flex; align-items: center; gap: 10px; }
+  .how-n {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+  .how-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: var(--grad);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+  .how-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .how-pre {
+    margin: 0;
+    padding: 14px 16px;
+    background: var(--code-block-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-x: auto;
+    flex: 1;
+    white-space: pre;
+  }
+
+  .how-arrow-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+  }
+  .how-arrow-cell svg {
+    width: 64px;
+    height: 24px;
+  }
+  .how-arrow-line, .how-arrow-head {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 800ms ease-out;
+    transition-delay: var(--delay, 0ms);
+  }
+  .how-revealed .how-arrow-line,
+  .how-revealed .how-arrow-head {
+    stroke-dashoffset: 0;
+  }
+
+  @media (max-width: 880px) {
+    .how-arrow-cell svg { transform: rotate(90deg); width: 32px; height: 32px; }
+  }
+
+  @media (min-width: 881px) {
+    .how-grid {
+      grid-template-columns: 1fr 64px 1fr 64px 1fr;
+      gap: 12px;
+    }
+  }
+</style>

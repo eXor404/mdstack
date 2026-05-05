@@ -1,6 +1,5 @@
 node_modules/
+dist/
 .astro/
-example/
-website/
-*.log
 .DS_Store
+.cache/

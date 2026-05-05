@@ -1,0 +1,17 @@
+{
+  "name": "mdstack-website",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/build-theme-previews.mjs && node scripts/fetch-version.mjs && astro build",
+    "build:fast": "node scripts/fetch-version.mjs && astro build",
+    "build:previews": "node scripts/build-theme-previews.mjs",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^6.2.1"
+  }
+}

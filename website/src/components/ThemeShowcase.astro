@@ -1,0 +1,342 @@
+---
+const themes = [
+  { id: 'angular',  label: 'angular',  domain: 'angular-vibes.dev',  blurb: 'Code-forward, sharp edges. The default.' },
+  { id: 'vue',      label: 'vue',      domain: 'vue-vibes.dev',      blurb: 'Calm, friendly, breathable.' },
+  { id: 'nuxt',     label: 'nuxt',     domain: 'nuxt-vibes.dev',     blurb: 'Clean dark surfaces with a green pulse.' },
+  { id: 'homebrew', label: 'homebrew', domain: 'homebrew-vibes.dev', blurb: 'Terminal-tactile and a bit nostalgic.' },
+];
+const initial = 'angular';
+---
+
+<section id="themes" class="themes">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Themes</p>
+      <h2>Pick a vibe. Or keep the default.</h2>
+      <p>Four themes, one config line. Switch any time.</p>
+    </div>
+
+    <div class="theme-stage" data-theme-stage data-active={initial} data-reveal style="--reveal-delay:80ms">
+      <div class="browser">
+        <div class="browser-chrome" aria-hidden="true">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <div class="browser-address">
+            <span class="lock" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>
+            </span>
+            <span class="addr-protocol">https://</span><span class="addr-host" data-theme-host>{themes.find((t) => t.id === initial)?.domain}</span>
+          </div>
+        </div>
+
+        <div class="browser-tabs" role="tablist" aria-label="Theme">
+          {themes.map((t) => (
+            <button
+              type="button"
+              role="tab"
+              class="theme-tab"
+              data-theme-tab={t.id}
+              aria-selected={t.id === initial ? 'true' : 'false'}
+              aria-controls="theme-frame"
+              tabindex={t.id === initial ? 0 : -1}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+
+        <label class="browser-select-label" for="theme-select-mobile">
+          Active theme
+          <select id="theme-select-mobile" class="browser-select" data-theme-select aria-label="Active theme">
+            {themes.map((t) => (
+              <option value={t.id} selected={t.id === initial ? true : undefined}>{t.label}</option>
+            ))}
+          </select>
+        </label>
+
+        <div class="browser-frame">
+          <iframe
+            id="theme-frame"
+            data-theme-frame
+            src={`/theme-previews/${initial}/index.html`}
+            title="Theme preview"
+            loading="lazy"
+            sandbox="allow-same-origin"
+          ></iframe>
+        </div>
+      </div>
+
+      <aside class="theme-meta">
+        <div class="theme-meta-row">
+          <span class="theme-meta-label">Active</span>
+          <span class="theme-meta-value gradient-text" data-theme-name>{initial}</span>
+        </div>
+        <p class="theme-meta-blurb" data-theme-blurb>{themes.find((t) => t.id === initial)?.blurb}</p>
+
+        <div class="config-card">
+          <span class="config-label">mdstack.config.js</span>
+          <pre class="config-pre"><code><span class="tok-key">export default</span> <span class="tok-punc">&#123;</span>
+  <span class="tok-prop">theme</span><span class="tok-punc">:</span> <span class="tok-str">'<span class="tok-theme gradient-text" data-theme-config>{initial}</span>'</span><span class="tok-punc">,</span>
+<span class="tok-punc">&#125;</span><span class="tok-punc">;</span></code></pre>
+        </div>
+
+        <ul class="theme-pickers" aria-hidden="true">
+          {themes.map((t) => (
+            <li class="theme-picker" data-theme-picker={t.id} data-active={t.id === initial ? 'true' : 'false'}>
+              <span class="picker-swatch" data-swatch={t.id}></span>
+              <span class="picker-label">{t.label}</span>
+            </li>
+          ))}
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/theme-preview.ts';
+</script>
+
+<style>
+  .theme-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .browser {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 60px -32px rgba(0, 0, 0, 0.55);
+  }
+  .browser-chrome {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-2);
+  }
+  .browser-chrome .dot {
+    width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+  }
+  .browser-chrome .dot-r { background: #ff5f56; }
+  .browser-chrome .dot-y { background: #ffbd2e; }
+  .browser-chrome .dot-g { background: #27c93f; }
+  .browser-address {
+    flex: 1;
+    margin-left: 8px;
+    height: 28px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    overflow: hidden;
+  }
+  .lock { display: inline-flex; opacity: 0.7; }
+  .addr-protocol { color: var(--text-dim); }
+  .addr-host { color: var(--text); }
+
+  .browser-tabs {
+    display: flex;
+    gap: 0;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .browser-tabs::-webkit-scrollbar { display: none; }
+  .theme-tab {
+    flex: 1;
+    min-width: 90px;
+    padding: 12px 16px;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color var(--t-fast), background var(--t-fast), border-color var(--t-fast);
+    position: relative;
+  }
+  .theme-tab:hover { color: var(--text); background: var(--surface-2); }
+  .theme-tab[aria-selected='true'] {
+    color: var(--text);
+    background: var(--surface);
+    border-image: var(--grad) 1;
+    border-bottom: 2px solid;
+  }
+
+  .browser-select-label {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-2);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .browser-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .browser-frame {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: var(--code-block-bg);
+    overflow: hidden;
+  }
+  .browser-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: var(--bg);
+    transition: opacity 120ms ease-out;
+  }
+  .browser-frame.is-fading iframe { opacity: 0; }
+
+  .theme-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+  .theme-meta-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .theme-meta-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .theme-meta-value {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .theme-meta-blurb {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .config-card {
+    background: var(--code-block-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .config-label {
+    display: block;
+    padding: 8px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+  }
+  .config-pre {
+    margin: 0;
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .tok-key { color: var(--accent-purple); }
+  .tok-prop { color: var(--accent-cyan); }
+  .tok-str { color: var(--accent-green); }
+  .tok-punc { color: var(--text-dim); }
+  .tok-theme { font-weight: 700; }
+
+  .theme-pickers {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .theme-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: border-color var(--t-fast), color var(--t-fast);
+  }
+  .theme-picker[data-active='true'] {
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--accent-orange) 35%, var(--border-strong));
+  }
+  .picker-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    border: 1px solid var(--border-strong);
+  }
+  .picker-swatch[data-swatch='angular']  { background: linear-gradient(135deg, #ff0080, #ff4500, #ffa500); }
+  .picker-swatch[data-swatch='vue']      { background: linear-gradient(135deg, #41b883, #34495e); }
+  .picker-swatch[data-swatch='nuxt']     { background: linear-gradient(135deg, #00dc82, #003c1f); }
+  .picker-swatch[data-swatch='homebrew'] { background: linear-gradient(135deg, #f4a259, #5b4636); }
+
+  @media (max-width: 1080px) {
+    .theme-stage { grid-template-columns: 1fr; }
+    .theme-meta { padding: 20px; }
+  }
+  @media (max-width: 640px) {
+    .browser-tabs { display: none; }
+    .browser-select-label { display: flex; }
+    .browser-frame { aspect-ratio: 16 / 11; }
+    .theme-pickers { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

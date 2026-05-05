@@ -1,0 +1,117 @@
+---
+const faqs = [
+  {
+    q: 'What does mdstack actually do?',
+    a: 'You point it at a folder of markdown files. It runs a dev server with HMR while you write, and produces a static <code>dist/</code> directory when you build. No config required — drop the folder, get a site.',
+  },
+  {
+    q: 'How is this different from VitePress, MkDocs, or Docusaurus?',
+    a: 'Smaller surface area and more opinions. A single CLI binary, four built-in themes, and zero React/Vue config knowledge required to get started. If you need a plugin marketplace and a multi-locale routing system, those projects will serve you better. If you just want your folder of markdown to be a site, mdstack is shorter to read and shorter to run.',
+  },
+  {
+    q: 'Can I customize the theme?',
+    a: 'Today: pick one of <code>angular</code>, <code>vue</code>, <code>nuxt</code>, or <code>homebrew</code> via <code>mdstack.config.js</code> or the <code>--theme</code> flag. Custom theme authoring is on the roadmap — for now you can fork a theme CSS file and load it locally.',
+  },
+  {
+    q: 'Where do I deploy the output?',
+    a: 'Anywhere static. <code>dist/</code> is self-contained — drop it on Vercel, Netlify, GitHub Pages, Cloudflare Pages, S3 + CloudFront, an nginx server, or a Docker container with any static file server.',
+  },
+  {
+    q: 'Is it stable?',
+    a: 'Pre-1.0. APIs and CLI flags may change before <code>0.x → 1.0</code>. Pin your version in <code>package.json</code> and read the changelog before bumping.',
+  },
+];
+---
+
+<section id="faq" class="faq">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">FAQ</p>
+      <h2>Frequently asked.</h2>
+    </div>
+
+    <div class="faq-list">
+      {faqs.map((item, i) => (
+        <details class="faq-item" open={i === 0 ? true : undefined} data-reveal style={`--reveal-delay:${i * 60}ms`}>
+          <summary>
+            <span class="faq-q">{item.q}</span>
+            <span class="faq-marker" aria-hidden="true">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 6l4 4 4-4"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="faq-a" set:html={item.a} />
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-list {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color var(--t-fast), background var(--t-fast);
+  }
+  .faq-item:hover { border-color: var(--border-strong); }
+  .faq-item[open] { background: var(--surface-2); }
+
+  .faq-item > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  .faq-item > summary::-webkit-details-marker { display: none; }
+  .faq-q {
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.005em;
+  }
+  .faq-marker {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    color: var(--text-muted);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    transition: transform var(--t-fast), color var(--t-fast);
+    flex-shrink: 0;
+  }
+  .faq-item[open] .faq-marker {
+    transform: rotate(180deg);
+    color: var(--accent-orange);
+  }
+
+  .faq-a {
+    padding: 0 20px 18px;
+    color: var(--text-muted);
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+  .faq-a code {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    padding: 1px 6px;
+    background: var(--code-bg);
+    border-radius: 4px;
+    color: var(--text);
+  }
+</style>
