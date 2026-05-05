@@ -12,7 +12,7 @@ export default {
   },
 
   // Theme. Built-in: 'angular' (default), 'vue', 'nuxt', 'homebrew'.
-  theme: 'homebrew',
+  theme: 'angular',
 
   // Public URL of your site (no trailing slash). Used to generate
   // sitemap.xml and the Sitemap line in robots.txt at build time.
