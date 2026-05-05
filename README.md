@@ -63,11 +63,6 @@ mdstack [dev|build|preview] [--theme <name>] <folder>
 
 Available themes: `angular` (default, dark gradient editorial), `vue` (clean docs aesthetic à la vuejs.org with always-dark Palenight code blocks), `nuxt` (electric-green Nuxt UI Pro feel with subtle dot-grid, file-tab code blocks, and animated link underlines), `homebrew` (aggressively minimal GitHub-Pages-Jekyll vibe — single column, light-only, no chrome).
 
-## Roadmap
-
-- [ ] `keywords`, `author`, `license`, `repository`, `homepage` in `package.json`
-- [ ] Auto-generated `sitemap.xml` / `robots.txt`
-
 ## Requirements
 
 Node 18+.
