@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, resolve, isAbsolute, relative } from 'node:path';
-import { existsSync, statSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, statSync, writeFileSync, readFileSync } from 'node:fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -88,17 +88,9 @@ function ensureDefaultConfig(source) {
 }
 
 function ensureDefaultIndex(source) {
-  // Only seed a welcome page when the folder is fresh (no markdown yet) —
-  // don't drop a placeholder into an existing docs project.
-  let entries;
-  try {
-    entries = readdirSync(source);
-  } catch {
-    return;
-  }
-  if (entries.some((name) => name.toLowerCase().endsWith('.md'))) return;
-
   const indexPath = resolve(source, 'index.md');
+  if (existsSync(indexPath)) return;
+
   const templatePath = resolve(__dirname, 'templates', 'index.md');
   try {
     const content = readFileSync(templatePath, 'utf8');
